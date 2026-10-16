@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Confirm deployment started
+        run: echo "Deployment workflow has started!"
+
+      - name: Check deployment configuration
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          APP_ENV: ${{ vars.APP_ENV }}
+          DEPLOY_REGION: ${{ vars.DEPLOY_REGION }}
+        shell: bash
+        run: |
+          echo "Checking deployment configuration..."
+
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "DEPLOY_TOKEN is missing!"
+            exit 1
+          fi
+
+          echo "DEPLOY_TOKEN is configured."
+
+          if [ -z "$APP_ENV" ]; then
+            echo "APP_ENV is missing!"
+            exit 1
+          fi
+
+          echo "APP_ENV is configured: $APP_ENV"
+
+          if [ -z "$DEPLOY_REGION" ]; then
+            echo "DEPLOY_REGION is missing!"
+            exit 1
+          fi
+
+          echo "DEPLOY_REGION is configured: $DEPLOY_REGION"
+
+      - name: Deployment simulation
+        run: |
+          echo "All configuration checks passed."
+          echo "Simulated deployment completed successfully."
+          echo "No actual deployment was performed."
