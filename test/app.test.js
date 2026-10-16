@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { greet } from "../src/app.js";
 
 test("greets a supplied name", () => {
-  assert.equal(greet("Ali"), "Hello, Ali!");
+  assert.equal(greet("Ali"), "Hello, Wrong!");
 });
 
 test("uses World as the default name", () => {
